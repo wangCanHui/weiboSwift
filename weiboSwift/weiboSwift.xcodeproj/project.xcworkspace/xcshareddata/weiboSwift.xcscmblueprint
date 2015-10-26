@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "D7667F43737CCD3F48E61D340A2FA7EC77FDBDE7",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "D7667F43737CCD3F48E61D340A2FA7EC77FDBDE7" : 0,
+    "2EFCFE38EC465BE66D87C545E7EAAA5397A3BF08" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "5BC29073-5E58-4A43-A48F-0160CD2E7D16",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "D7667F43737CCD3F48E61D340A2FA7EC77FDBDE7" : "weiboSwift\/",
+    "2EFCFE38EC465BE66D87C545E7EAAA5397A3BF08" : ""
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "weiboSwift",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "weiboSwift.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:wangCanHui\/weiboSwift.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "2EFCFE38EC465BE66D87C545E7EAAA5397A3BF08"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:wangCanHui\/weiboSwift.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D7667F43737CCD3F48E61D340A2FA7EC77FDBDE7"
+    }
+  ]
+}
