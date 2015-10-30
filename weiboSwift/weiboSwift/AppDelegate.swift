@@ -15,7 +15,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-
+NSHomeDirectory()
+        // 设置全局导航栏文字颜色,尽早设置
+        UINavigationBar.appearance().tintColor = UIColor.orangeColor()
+        
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
         let viewVC = UIViewController()

@@ -30,5 +30,12 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+    <!-- 允许使用http -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+    </dict>
+    
 </dict>
 </plist>
