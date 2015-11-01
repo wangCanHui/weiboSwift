@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CZTabBarController: UITabBarController {
+class CZMainViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,10 +36,12 @@ class CZTabBarController: UITabBarController {
     */
     func addChildViewController(tableVc:UITableViewController,title:String,normalImgName:String){
         
+        // 设置标题,不能在包装成UINavigationController之后再设置标题，否则没有效果
+        tableVc.title = title
         // 包装成UINavigationController
         let nav = UINavigationController(rootViewController: tableVc)
         // 设置标题
-        nav.title = title
+//        nav.title = title
         // 设置图片
         nav.tabBarItem.image = UIImage(named: normalImgName)
         // 添加到UITabBarController中

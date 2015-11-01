@@ -20,6 +20,8 @@ class CZOauthViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "取消", style: UIBarButtonItemStyle.Plain, target: self, action: "close")
+        
         let request = NSURLRequest(URL: CZNetworkTools.sharedInstance.oauthUrl())
         // 请求用户授权Token
         webView.loadRequest(request)
@@ -97,26 +99,45 @@ extension CZOauthViewController: UIWebViewDelegate{
     func loadAccessToken(code:String){
         CZNetworkTools.sharedInstance.loadAccessToken(code) { (result, error) -> () in
             if(error != nil || result == nil){
-                SVProgressHUD.showWithStatus("网络不给力", maskType: SVProgressHUDMaskType.Black)
-                // 延迟关闭. dispatch_after 没有提示,可以拖oc的dispatch_after来修改
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), { () -> Void in
-                    self.close()
-                });
+               self.netError("网络不给力...")
+                
             }
             print("result:\(result)")
             
             // 把result字典里面的数据转化为CZUserAccount模型
             let account = CZUserAccount.init(dict: result!)
-            
+//             print("account:\(account)")
             // 把模型保存到沙盒
             account.saveAccount()
             
-            print("account:\(account)")
-            
-            SVProgressHUD.dismiss()
+             // 加载用户数据
+            account.loadUserInfo({ (error) -> Void in
+                if error != nil {
+                    self.netError("加载用户数据出错...")
+                    return
+                }
+                
+                // 加载成功
+                print("---account:\(CZUserAccount.loadAccount())")
+                self.close()
+                
+                // 切换控制器，到欢迎归来界面，（个人认为：首次使用应该到新特新界面）
+                (UIApplication.sharedApplication().delegate as! AppDelegate).switchRootController(false)
+            })
+           
         }
-        
     }
+    
+    // 网络出错问题提示
+    private func netError(message: String) {
+        
+        SVProgressHUD.showWithStatus(message, maskType: SVProgressHUDMaskType.Black)
+        // 延迟关闭. dispatch_after 没有提示,可以拖oc的dispatch_after来修改
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), { () -> Void in
+            self.close()
+        })
+    }
+    
     
     
 }

@@ -17,7 +17,7 @@ class CZBaseViewController: UITableViewController{
     2.super.loadView() 创建TableView
     
     */
-    let userLogin = false
+    let userLogin = CZUserAccount.userLogin
     
     override func loadView() {
         userLogin ? super.loadView() : setupVisitorView()
@@ -73,12 +73,14 @@ extension CZBaseViewController: CZVisitorViewDelegate {
     // MARK: - 代理方法
     func visitorViewRegisterBtnClick() {
         print(__FUNCTION__)
+        
     }
     
     func visitorViewLoginBtnClick() {
         // 加载授权界面
         let oauthVc = CZOauthViewController()
-        presentViewController(oauthVc, animated: true, completion: nil)
+        let nav = UINavigationController(rootViewController: oauthVc)
+        presentViewController(nav, animated: true, completion: nil)
          print(__FUNCTION__)
     }
     
