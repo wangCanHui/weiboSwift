@@ -22,7 +22,7 @@ class CZWelcomeViewController: UIViewController {
         // 设置用户使用头像
         if let userIconViewName = CZUserAccount.loadAccount()?.avatar_large {   // 采用可选的处理方式。保证有值
             
-            iconView.sd_setImageWithURL(NSURL(string: userIconViewName), placeholderImage: UIImage(named: "ad_background"))
+            iconView.cz_setImageWithURL(NSURL(string: userIconViewName), placeholderImage: UIImage(named: "ad_background"))
         }
     }
     

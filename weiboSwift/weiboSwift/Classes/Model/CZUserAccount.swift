@@ -99,7 +99,7 @@ class CZUserAccount: NSObject , NSCoding{
         if userAccount == nil {
              // 内存中没有才来解档,并赋值给内存中的账号
             userAccount = NSKeyedUnarchiver.unarchiveObjectWithFile(accountPath) as? CZUserAccount
-            print("解档-----")
+//            print("解档-----")
         }
         // 判断如果有账号,还需要判断是否过期
         // NSDate(): 表示当前时间 2015
@@ -113,7 +113,7 @@ class CZUserAccount: NSObject , NSCoding{
         //        print("当前时间:\(NSDate())")
 
         if userAccount != nil && userAccount?.expires_date?.compare(NSDate()) == NSComparisonResult.OrderedDescending {
-            print("账号有效")
+//            print("账号有效")
 //            print("userAccount\(userAccount)")
             return userAccount
         }

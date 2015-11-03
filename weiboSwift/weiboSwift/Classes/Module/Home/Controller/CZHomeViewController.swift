@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AFNetworking
 import SVProgressHUD
 
 class CZHomeViewController: CZBaseViewController {
@@ -51,12 +52,17 @@ class CZHomeViewController: CZBaseViewController {
     
     private func prepareTableView() {
         // talbeView注册cell
-        tableView.registerClass(CZStatusCell.self, forCellReuseIdentifier: "cell")
-        // 设置预估行高
-        tableView.estimatedRowHeight = 300
-         // AutomaticDimension 根据约束自己来设置高度
-        tableView.rowHeight = UITableViewAutomaticDimension
+         // 原创微博cell
+        tableView.registerClass(CZStatusNormalCell.self, forCellReuseIdentifier: CZStatusCellIdentifier.NormalCell.rawValue)
+         // 转发微博cell
+        tableView.registerClass(CZStatusForwardCell.self, forCellReuseIdentifier: CZStatusCellIdentifier.ForwardCell.rawValue)
         
+        // 设置预估行高
+//        tableView.estimatedRowHeight = 300  // 使用预估行高，拖动视图的时候会有小小的卡顿效果
+         // AutomaticDimension 根据约束自己来设置高度
+//        tableView.rowHeight = UITableViewAutomaticDimension
+        // 消除分割线
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.None
     }
     
     // MARK: - 设置导航栏
@@ -105,12 +111,38 @@ class CZHomeViewController: CZBaseViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        // 获取模型
+        let status = statuses![indexPath.row]
         // 获取cell
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell") as! CZStatusCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(status.cellID()) as! CZStatusCell
         // 设置cell的模型
-        cell.status = self.statuses?[indexPath.row]
+        cell.status = status
         
         return cell
     }
+    // 使用 这个方法,会再次调用 heightForRowAtIndexPath,造成死循环
+    //        tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+    // 返回cell的高度,如果每次都去计算行高,消耗性能,缓存行高,将行高缓存到模型里面
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        // 获取模型
+        let status = statuses![indexPath.row]
+        
+        // 1. 先去模型里面看有没缓存行高
+        if let rowHeight = status.rowHeight {
+            // 能进来说明缓存中有行高，直接返回缓存的行高
+            return rowHeight
+        }
+        // 2. 缓存中没有行高
+        let id = status.cellID()
+        let cell = tableView.dequeueReusableCellWithIdentifier(id) as! CZStatusCell
+        // 取出cell中计算好的行高
+        let rowHeight = cell.rowHeight(status)
+        // 赋值给缓存
+        status.rowHeight = rowHeight
+        
+        return rowHeight
+        
+    }
+    
 
 }

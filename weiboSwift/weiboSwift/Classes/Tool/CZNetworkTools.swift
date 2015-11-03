@@ -42,6 +42,7 @@ class CZNetworkTools: NSObject {
     override init() {
         let urlString = "https://api.weibo.com/"
         afnManager = AFHTTPSessionManager(baseURL: NSURL(string: urlString)) // 此处使用baseURL来初始化AFHTTPSessionManager对象，所以在下面的网络请求中，可以不用写这个baseURL部分
+//        AFJSONResponseSerializer ，点到这里类里面，可以看到AFN可以解析的响应类型
         afnManager.responseSerializer.acceptableContentTypes?.insert("text/plain")
     }
     
@@ -144,7 +145,6 @@ class CZNetworkTools: NSObject {
 
         // 发送请求,注意参数parameters不能是可选的，所以上面parameters的value都要强制拆包，而且已经肯定是有值的
         requestGET(urlString, parameters: parameters, finished: finished)
-        
     }
     
     /// 判断access token是否有值,没有值返回nil,如果有值生成一个字典
@@ -154,7 +154,7 @@ class CZNetworkTools: NSObject {
     
     // MARK: - 获取微博数据
     func loadStatus(finished: netWorkFinishedCallBack) {
-        guard var parameters = tokenDict() else {
+        guard let parameters = tokenDict() else {
             print("accessToken为空")
             let error = CZNetworkError.emptyToken.error()
             // 回调
@@ -166,7 +166,30 @@ class CZNetworkTools: NSObject {
         
         // 发送请求
         requestGET(urlString, parameters: parameters, finished: finished)
+        
+        // 网络不给力,加载本地数据
+//        loadLocalStatus(finished)
+
     }
+    
+    private func loadLocalStatus(finished:netWorkFinishedCallBack) {
+        // 获取路径
+        let path = NSBundle.mainBundle().pathForResource("statuses", ofType: "json")
+        // 加载文件数据
+        let data = NSData(contentsOfFile: path!)
+        
+        // 转成json
+        
+        do {
+            let json = try NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions(rawValue: 0))
+            
+            finished(result: json as? [String: AnyObject], error: nil)
+        }catch {
+            print("出异常了")
+        }
+        
+    }
+
     
     // MARK: - 封装AFN.GET
     func requestGET(urlString: String, parameters: AnyObject?,finished:(result: [String: AnyObject]?,error: NSError?) -> Void) {

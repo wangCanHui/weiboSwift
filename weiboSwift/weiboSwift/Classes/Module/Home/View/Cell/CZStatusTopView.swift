@@ -17,7 +17,7 @@ class CZStatusTopView: UIView {
             // 设置视图内容
             // 用户头像
             if let iconUrl = status?.user?.profile_image_url {
-               iconView.sd_setImageWithURL(NSURL(string: iconUrl))
+               iconView.cz_setImageWithURL(NSURL(string: iconUrl))
             }
             // 认证类型
             // 判断类型设置不同的图片
@@ -53,6 +53,7 @@ class CZStatusTopView: UIView {
     // MARK: - 准备UI
     private func prepareUI() {
         // 添加子控件
+        addSubview(topSeparatorView)
         addSubview(iconView)
         addSubview(verifiedView)
         addSubview(nameLabel)
@@ -61,10 +62,13 @@ class CZStatusTopView: UIView {
         addSubview(memberView)
         
         // 添加约束
+        /// 顶部分割视图
+        topSeparatorView.ff_AlignInner(type: ff_AlignType.TopLeft, referView: self, size: CGSizeMake(UIScreen.width(), 10))
+        
         /// 头像视图
-        iconView.ff_AlignInner(type: ff_AlignType.TopLeft, referView: self, size: CGSizeMake(35, 35), offset: CGPointMake(8, 8))
+        iconView.ff_AlignVertical(type: ff_AlignType.BottomLeft, referView: topSeparatorView, size: CGSizeMake(35, 35), offset: CGPointMake(8, 8))
         /// 认证图标
-        verifiedView.ff_AlignInner(type: ff_AlignType.BottomRight, referView: iconView, size: CGSizeMake(17, 17), offset: CGPointMake(8.5, 8.5))
+        verifiedView.ff_AlignInner(type: ff_AlignType.BottomRight, referView: iconView, size: CGSizeMake(17, 17), offset: CGPointMake(3, 3))
         /// 名称
         nameLabel.ff_AlignHorizontal(type: ff_AlignType.TopRight, referView: iconView, size: nil, offset: CGPointMake(8, 0))
         /// 时间
@@ -77,8 +81,20 @@ class CZStatusTopView: UIView {
     }
     
     // MARK: - 懒加载
+    /// 顶部分割视图
+    private lazy var topSeparatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 0.9, alpha: 1)
+        return view
+    }()
+    
     /// 用户头像
-    private lazy var iconView = UIImageView()
+    private lazy var iconView: UIImageView = {
+        let iconView = UIImageView()
+        iconView.layer.cornerRadius = 17.5
+        iconView.layer.masksToBounds = true
+        return iconView
+    }()
     
     /// 认证图标
     private lazy var verifiedView = UIImageView()
