@@ -189,7 +189,7 @@ class CZStatus: NSObject {
                         return
                     }
                     // 没有出错
-                    print("下载图片完成:\(url)")
+//                    print("下载图片完成:\(url)")
                     // 记录下载图片的大小
                     if let imageData = UIImagePNGRepresentation(image) {
                         length += imageData.length
@@ -202,7 +202,7 @@ class CZStatus: NSObject {
         }
          // 所有图片都下载完,在通知调用者
         dispatch_group_notify(group, dispatch_get_main_queue()) { () -> Void in
-             print("所有图片下载完成,告诉调用者获取到了微博数据: 大小:\(length / 1024)")
+//             print("所有图片下载完成,告诉调用者获取到了微博数据: 大小:\(length / 1024)")
             // 通知调用者,已经有数据
             finished(statuses: statuses, error: nil)
         }

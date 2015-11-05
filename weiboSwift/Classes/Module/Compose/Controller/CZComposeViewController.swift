@@ -43,7 +43,7 @@ class CZComposeViewController: UIViewController {
     
     /// 键盘frame改变
     func willChangeFrame(notification:NSNotification) {
-        print("notification:\(notification)")
+//        print("notification:\(notification)")
         // 获取键盘最终位置
         let endFrame = notification.userInfo![UIKeyboardFrameEndUserInfoKey]!.CGRectValue
         // 动画时间
