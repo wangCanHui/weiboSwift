@@ -20,7 +20,6 @@ class CZNewFeatureViewController: UICollectionViewController {
     
     init() {
         super.init(collectionViewLayout: layout)
-        
     }
 
     required init?(coder aDecoder: NSCoder) {

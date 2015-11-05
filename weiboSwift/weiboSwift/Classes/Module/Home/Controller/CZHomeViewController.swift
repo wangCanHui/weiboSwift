@@ -31,26 +31,114 @@ class CZHomeViewController: CZBaseViewController {
         setupNavigationBar()
         prepareTableView()
         
+        // 默认高度60,宽度是屏幕的宽度
+        // 自定义 UIRefreshControl,在 自定义的UIRefreshControl添加自定义的view
+        refreshControl = CZRefreshControl()
+        // 添加下拉刷新响应事件
+        refreshControl?.addTarget(self, action: "loadData", forControlEvents: UIControlEvents.ValueChanged)
+        
+        // 调用beginRefreshing，使第一次进入首页时显示刷新,但是不会触发 ValueChanged 事件,只会让刷新控件进入刷新状态
+        refreshControl?.beginRefreshing()
+        // 代码触发 refreshControl 的 ValueChanged 事件
+        refreshControl?.sendActionsForControlEvents(UIControlEvents.ValueChanged)
+        
+    }
+    
+    /*
+    since_id	int64	若指定此参数，则返回ID比since_id大的微博（即比since_id时间晚的微博），默认为0。
+    max_id	int64	若指定此参数，则返回ID小于或等于max_id的微博，默认为0。
+    */
+    
+    /// 下拉刷新响应事件
+   @objc private func loadData() {
         // TODO: 测试获取微博数据
         print("加载微博数据")
-        CZStatus.loadStatus { (statuses, error) -> Void in
+        // 默认下拉刷新,获取id最大的微博, 如果没有数据,就默认值0,加载20条微博数据
+        var since_id = statuses?.first?.id ?? 0
+        var max_id = 0
+        
+        // 如果上拉菊花正在转,表示 上拉加载更多数据
+        if pullUpView.isAnimating() {
+            since_id = 0
+            max_id = statuses?.last?.id ?? 0
+        }
+        
+        
+        
+        CZStatus.loadStatus(since_id, max_id: max_id) { (statuses, error) -> Void in
+             // 关闭下拉刷新控件
+            self.refreshControl?.endRefreshing()
+             // 将上拉菊花停止
+            self.pullUpView.stopAnimating()
+          
             if (error != nil){
                 SVProgressHUD.showErrorWithStatus("加载微博数据失败,网络不给力", maskType: SVProgressHUDMaskType.Black)
                 return
             }
-            // 能到下面来说明没有错误
+             // 能到下面来说明没有错误
+            // 下拉刷新,显示加载了多少条微博
+            if since_id > 0 {
+                let count = statuses?.count ?? 0
+                self.showTipView(count)
+            }
+           
             if statuses == nil || statuses?.count == 0 {
                 SVProgressHUD.showInfoWithStatus("没有新的微博数据", maskType: SVProgressHUDMaskType.Black)
                 return
             }
+            // 判断如果是下拉刷新,加获取到数据拼接在现有数据的前
+            if since_id > 0 {
+                print("下拉刷新获取\(statuses?.count)条微博")
+                self.statuses = statuses! + self.statuses!
+            }else if max_id > 0 {
+                print("上拉刷新获取\(statuses?.count)条微博")
+                self.statuses = self.statuses! +  statuses!
+            }else {
+                // 首次进入首页有微博数据,赋值给空的微博模型数组
+                self.statuses = statuses
+                print("首次进入首页获取\(statuses?.count)条微博")            }
             
-            // 有微博数据
-            self.statuses = statuses
-            print("statuses:\(statuses)")
+        }
+
+    }
+    
+    /// 显示下拉刷新加载了多少条微博
+    private func showTipView(count: Int) {
+        let tipLabel = UILabel(fontSize: 16, textColor: UIColor.whiteColor())
+        let tipLabelHeight:CGFloat = 44
+        tipLabel.frame = CGRect(x: 0, y: -20 - tipLabelHeight, width: UIScreen.width(), height: tipLabelHeight)
+        tipLabel.textAlignment = NSTextAlignment.Center
+        tipLabel.backgroundColor = UIColor.orangeColor()
+        
+        tipLabel.text = count == 0 ? "没有新的微博" : "加载了 \(count) 条微博"
+        
+        // 导航栏是从状态栏下面开始
+        // 添加到导航栏最下面
+        navigationController?.navigationBar.insertSubview(tipLabel, atIndex: 0)
+        // 开始动画
+        UIView.animateWithDuration(0.75, animations: { () -> Void in
+            // 让动画反过来执行
+            //            UIView.setAnimationRepeatAutoreverses(true)
+            
+            // 重复执行
+            //            UIView.setAnimationRepeatCount(5)
+            tipLabel.frame.origin.y = tipLabelHeight
+            }) { (_) -> Void in
+                
+                UIView.animateWithDuration(0.7, delay: 0.3, options: UIViewAnimationOptions(rawValue: 0), animations: { () -> Void in
+                    
+                    tipLabel.frame.origin.y = -20 - tipLabelHeight
+                    
+                    }, completion: { (_) -> Void in
+                        
+                        tipLabel.removeFromSuperview()
+                })
         }
     }
     
     private func prepareTableView() {
+         // 添加footView,上拉加载更多数据的菊花
+        tableView.tableFooterView = pullUpView
         // talbeView注册cell
          // 原创微博cell
         tableView.registerClass(CZStatusNormalCell.self, forCellReuseIdentifier: CZStatusCellIdentifier.NormalCell.rawValue)
@@ -118,6 +206,15 @@ class CZHomeViewController: CZBaseViewController {
         // 设置cell的模型
         cell.status = status
         
+        // 当最后一个cell显示的时候来加载更多微博数据
+        // 如果菊花正在显示,就表示正在加载数据,就不加载数据
+        if indexPath.row == statuses!.count - 1 && !pullUpView.isAnimating() {
+            // 上拉菊花开始转
+            pullUpView.startAnimating()
+            // 加载数据
+            loadData()
+        }
+        
         return cell
     }
     // 使用 这个方法,会再次调用 heightForRowAtIndexPath,造成死循环
@@ -144,5 +241,13 @@ class CZHomeViewController: CZBaseViewController {
         
     }
     
-
+    // MARK: - 懒加载
+    /// 上拉加载更多数据显示的菊花
+    private lazy var pullUpView: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
+        indicator.color = UIColor.magentaColor()
+        return indicator
+    }()
+    
+    
 }

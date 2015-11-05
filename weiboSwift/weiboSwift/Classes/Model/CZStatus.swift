@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 enum CZStatusCellIdentifier: String {
     case NormalCell = "NormalCell"
@@ -18,7 +19,7 @@ class CZStatus: NSObject {
     var created_at: String?
     
     /// 字符串型的微博ID
-    var idstr: String?
+    var id: Int = 0
     
     /// 微博信息内容
     var text: String?
@@ -122,8 +123,9 @@ class CZStatus: NSObject {
     
     /// 加载微博数据
     /// 没有模型对象就能加载数据
-    class func loadStatus(finished: (statuses: [CZStatus]?,error: NSError?) -> Void) {
-        CZNetworkTools.sharedInstance.loadStatus { (result, error) -> Void in
+    class func loadStatus(since_id: Int,max_id: Int,finished: (statuses: [CZStatus]?,error: NSError?) -> Void) {
+        CZNetworkTools.sharedInstance.loadStatus(since_id, max_id: max_id) { (result, error) -> Void in
+            
             if  error != nil {
                 print("error:\(error)")
                 // 通知调用者
@@ -141,7 +143,8 @@ class CZStatus: NSObject {
                     statuses.append(status)
                 }
                 // 字典转模型完成
-                // 通知调用者
+                // 缓存图片，通知调用者
+                cacheWebImage(statuses, finished: finished)
                 finished(statuses: statuses, error: nil)
             }
             else {
@@ -152,5 +155,58 @@ class CZStatus: NSObject {
         }
     }
     
+    /// 缓存图片，通知调用者
+    class func cacheWebImage(statuses:[CZStatus]?,finished: (statuses: [CZStatus]?,error: NSError?) -> Void) {
+       // 创建任务组
+        let group = dispatch_group_create()
+        // 判断是否有模型
+        guard let list = statuses else {
+            // 没有模型
+            return
+        }
+        // 记录缓存图片的大小
+        var length = 0
+        // 遍历模型
+        for status in list {
+            // 如果没有图片需要下载,接着遍历下一个
+            let count = status.pictureUrls?.count ?? 0
+            if count == 0 {
+                // 没有图片,遍历下一个模型
+                continue
+            }
+            
+            if count == 1 {
+                let url = status.pictureUrls![0]
+                // 缓存图片
+                // 在缓存之前放到任务组里面
+                dispatch_group_enter(group)
+                SDWebImageManager.sharedManager().downloadImageWithURL(url, options: SDWebImageOptions(rawValue: 0), progress: nil, completed: { (image, error, _, _, _) -> Void in
+                     // 离开组
+                    dispatch_group_leave(group)
+                     // 判断有没有错误
+                    if error != nil {
+                        print("下载图片出错:\(url)")
+                        return
+                    }
+                    // 没有出错
+                    print("下载图片完成:\(url)")
+                    // 记录下载图片的大小
+                    if let imageData = UIImagePNGRepresentation(image) {
+                        length += imageData.length
+                    }
+                    
+                })
+                
+            }
+            
+        }
+         // 所有图片都下载完,在通知调用者
+        dispatch_group_notify(group, dispatch_get_main_queue()) { () -> Void in
+             print("所有图片下载完成,告诉调用者获取到了微博数据: 大小:\(length / 1024)")
+            // 通知调用者,已经有数据
+            finished(statuses: statuses, error: nil)
+        }
+        
+    }
     
 }

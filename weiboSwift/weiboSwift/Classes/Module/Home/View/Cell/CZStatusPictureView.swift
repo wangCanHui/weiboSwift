@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class CZStatusPictureView: UICollectionView {
 
@@ -48,8 +49,17 @@ class CZStatusPictureView: UICollectionView {
             return CGSizeZero
         }
         
+        // 在这个时候需要有图片,才能获取到图片的大小,缓存图片越早越好
         if count == 1{
-            let size = CGSizeMake(150, 120)
+            // 获取图片的url路径
+            let urlStr = status!.pictureUrls![0].absoluteString
+            // 获取缓存好的图片,缓存的图片可能没有成功
+            let image = SDWebImageManager.sharedManager().imageCache.imageFromDiskCacheForKey(urlStr)
+            var size = CGSizeMake(150, 120)
+            // 当有图片的时候在来赋值
+            if image != nil {
+                size = image.size
+            }
             layout.itemSize = size
             return size
         }

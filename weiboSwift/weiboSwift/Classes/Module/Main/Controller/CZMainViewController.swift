@@ -61,6 +61,9 @@ class CZMainViewController: UITabBarController {
     
     /// 撰写按钮单击事件
     func composeButtonClick(){
+        let composeVC = CZComposeViewController()
+        let nav = UINavigationController(rootViewController: composeVC)
+        presentViewController(nav, animated: true, completion: nil)
         print(__FUNCTION__)
     }
     

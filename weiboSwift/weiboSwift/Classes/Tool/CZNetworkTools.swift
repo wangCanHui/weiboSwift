@@ -43,7 +43,7 @@ class CZNetworkTools: NSObject {
         let urlString = "https://api.weibo.com/"
         afnManager = AFHTTPSessionManager(baseURL: NSURL(string: urlString)) // 此处使用baseURL来初始化AFHTTPSessionManager对象，所以在下面的网络请求中，可以不用写这个baseURL部分
 //        AFJSONResponseSerializer ，点到这里类里面，可以看到AFN可以解析的响应类型
-        afnManager.responseSerializer.acceptableContentTypes?.insert("text/plain")
+        afnManager.responseSerializer.acceptableContentTypes?.insert("text/plain") //"text/plain"是新浪微博返回的数据类型，AFN没有这种解析类型，所以要添加
     }
     
 //    static let sharedInstance: CZNetworkTools = {
@@ -153,8 +153,8 @@ class CZNetworkTools: NSObject {
     }
     
     // MARK: - 获取微博数据
-    func loadStatus(finished: netWorkFinishedCallBack) {
-        guard let parameters = tokenDict() else {
+    func loadStatus(since_id: Int,max_id: Int,finished: netWorkFinishedCallBack) {
+        guard var parameters = tokenDict() else {
             print("accessToken为空")
             let error = CZNetworkError.emptyToken.error()
             // 回调
@@ -163,6 +163,14 @@ class CZNetworkTools: NSObject {
         }
         // access token 有值
         let urlString = "2/statuses/home_timeline.json"
+        
+        // 添加参数 since_id和max_id
+        // 判断是否有传since_id,max_id
+        if since_id > 0{
+            parameters["since_id"] = since_id
+        }else if max_id > 0 {
+            parameters["max_id"] = max_id - 1  // 若指定此参数，则返回ID小于或等于max_id的微博，默认为0。
+        }
         
         // 发送请求
         requestGET(urlString, parameters: parameters, finished: finished)
