@@ -13,7 +13,7 @@ class CZStatusBottomView: UIView {
     // MARK: - 构造函数
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        backgroundColor = UIColor.whiteColor()
+        backgroundColor = UIColor.whiteColor()
         prepareUI()
     }
 

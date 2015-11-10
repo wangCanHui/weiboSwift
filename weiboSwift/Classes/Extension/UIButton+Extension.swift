@@ -28,5 +28,22 @@ extension UIButton {
         setTitleColor(titleColor, forState: UIControlState.Normal)
         titleLabel?.font = UIFont.systemFontOfSize(fontSize)
     }
+   
+    /**
+     快速创建按钮
+     - parameter bkgImageName:  背景图片名称
+     - parameter title:      标题
+     - parameter titleColor: 标题颜色
+     - parameter fontSize:   标题大小
+     - returns: 按钮
+     */
     
+    convenience init(bkgImageName: String,title: String,titleColor: UIColor,fontSize: CGFloat) {
+        self.init()
+        
+        setBackgroundImage(UIImage(named: bkgImageName), forState: UIControlState.Normal)
+        setTitle(title, forState: UIControlState.Normal)
+        setTitleColor(titleColor, forState: UIControlState.Normal)
+        titleLabel?.font = UIFont.systemFontOfSize(fontSize)
+    }
 }

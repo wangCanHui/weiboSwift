@@ -7,12 +7,19 @@
 //
 
 import UIKit
+import SVProgressHUD
+
+let CZComposeViewControllerSendStatusSuccessNotification = "CZComposeViewControllerSendStatusSuccessNotification"
 
 class CZComposeViewController: UIViewController {
-
     // MARK: - 属性
     /// toolBar底部约束
+    
     private var toolBarBottomCons: NSLayoutConstraint?
+    /// 照片选择器控制器view的底部约束
+    private var photoSelectorViewBottomCons: NSLayoutConstraint?
+    /// 微博内容的最大长度
+    private let statusMaxLength = 20
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,21 +65,34 @@ class CZComposeViewController: UIViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 258)) // 键盘的高度是258
-        view.backgroundColor = UIColor.redColor()
+//        let view = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 258)) // 键盘的高度是258
+//        view.backgroundColor = UIColor.redColor()
         // 自定义键盘其实就是给 textView.inputView 赋值
 //        textView.inputView = view
-        textView.becomeFirstResponder()
+        // 图片现在器隐藏的时候才需要显示键盘，要不让每次选择一张图片返回发微博界面，都会调用此方法叫出键盘
+        if photoSelectorViewBottomCons?.constant != 0 {
+            textView.becomeFirstResponder()
+        }
     }
 
     // MARK: - 准备UI
     private func prepareUI() {
+        // 添加子控件,(顺序不能错，以免需要显示在上面的被遮挡)
+        view.addSubview(textView)
+        view.addSubview(photoSelectorVC.view)
+        view.addSubview(toolBar)
+        view.addSubview(lengthTipLabel)
+        
         // 设置导航栏
         setupNavigationBar()
-        // 设置toolBar
-        setupToolBar()
         // 设置输入框textView
         setupTextView()
+        // 设置图片选择器
+        preparePhotoSelectorView()
+        // 设置toolBar
+        setupToolBar()
+        // 设置可输入长度提示按钮
+        setupLengthTipLabel()
         
     }
     /// 设置导航栏
@@ -113,8 +133,7 @@ class CZComposeViewController: UIViewController {
     
      /// 设置toolBar
     private func setupToolBar() {
-         // 添加子控件
-        view.addSubview(toolBar)
+        
          // 添加约束
         let cons = toolBar.ff_AlignInner(type: ff_AlignType.BottomLeft, referView: view, size: CGSize(width: UIScreen.width(), height: 44))
         // 获取底部约束
@@ -153,16 +172,15 @@ class CZComposeViewController: UIViewController {
     
      /// 设置textView
     private func setupTextView() {
-        // 添加自控件
-        view.addSubview(textView)
+        
         /*
-        前提:
+        前提: (UITextView继承自UIScrollView)
         1.scrollView所在的控制器属于某个导航控制器
         2.scrollView控制器的view或者控制器的view的第一个子view
         */
         // scrollView会自动设置Insets, 比如scrollView所在的控制器属于某个导航控制器contentInset.top = 64
-        //        automaticallyAdjustsScrollViewInsets = true
-        
+        //        automaticallyAdjustsScrollViewInsets = true  // Defaults to YES
+
         // 设置约束
          // 相对控制器的view的内部左上角
         textView.ff_AlignInner(type: ff_AlignType.TopLeft, referView: view, size: nil)
@@ -170,11 +188,34 @@ class CZComposeViewController: UIViewController {
         textView.ff_AlignVertical(type: ff_AlignType.TopRight, referView: toolBar, size: nil)
     }
     
+      /// 准备 显示微博剩余长度 label
+    private func setupLengthTipLabel() {
+        // 设置约束
+        lengthTipLabel.ff_AlignVertical(type: ff_AlignType.TopRight, referView: toolBar, size: nil, offset: CGPoint(x: -8, y: -8))
+    }
     
+    /// 准备 照片选择器
+    private func preparePhotoSelectorView() {
+        // 照片选择器控制器的view
+        let photoSelectorView = photoSelectorVC.view
+        // 设置约束
+        photoSelectorView.translatesAutoresizingMaskIntoConstraints = false
+        let views = ["psv": photoSelectorView]
+        // 水平
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[psv]-0-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views))
+        // 高度
+        view.addConstraint(NSLayoutConstraint(item: photoSelectorView, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: view, attribute: NSLayoutAttribute.Height, multiplier: 0.6, constant: 0))
+        // 底部重合，偏移photoSelectorView的高度，使初始位置隐藏
+        photoSelectorViewBottomCons = NSLayoutConstraint(item: photoSelectorView, attribute: NSLayoutAttribute.Bottom, relatedBy: NSLayoutRelation.Equal, toItem: view, attribute: NSLayoutAttribute.Bottom, multiplier: 1, constant: view.bounds.size.height * 0.6)
+        view.addConstraint(photoSelectorViewBottomCons!)
+        
+    }
     
     // MARK: - 按钮点击事件
     /// 关闭控制器
     @objc private func close() {
+        // 关闭sv提示
+        SVProgressHUD.dismiss()
         // 关闭键盘
         textView.resignFirstResponder()
         dismissViewControllerAnimated(true, completion: nil)
@@ -182,11 +223,42 @@ class CZComposeViewController: UIViewController {
     
      /// 发微博
     func sendStatus() {
-        print(__FUNCTION__)
+        // 获取textView的文本内容发送给服务器
+        let text = textView.emoticonText()
+        // 判断微博内容的长度是否超出， 超出不发送
+        let statusLength = text.characters.count
+        if statusMaxLength - statusLength < 0 {
+            // 微博内容超出,提示用户
+            SVProgressHUD.showErrorWithStatus("微博长度超出", maskType: SVProgressHUDMaskType.Black)
+            return
+        }
+         // 获取图片选择器中的图片
+        let image = photoSelectorVC.photos.first
+         // 显示正在发送
+        SVProgressHUD.showWithStatus("正在发布微博...", maskType: SVProgressHUDMaskType.Black)
+        // 发送微博
+        CZNetworkTools.sharedInstance.sendStatus(image, status: text) { (result, error) -> Void in
+            if error != nil {
+                print("error:\(error)")
+                SVProgressHUD.showErrorWithStatus("发布微博失败...", maskType: SVProgressHUDMaskType.Black)
+                return
+            }
+            // 发送成功, 直接关闭正在发送界面
+            self.close()
+            // 刷新微博（下拉刷新）
+            NSNotificationCenter.defaultCenter().postNotificationName(CZComposeViewControllerSendStatusSuccessNotification, object: self)
+        }
     }
     
     func picture() {
-        print("图片")
+        // 让照片选择器的view移动上来
+        photoSelectorViewBottomCons?.constant = 0
+        // 退下键盘
+        textView.resignFirstResponder()
+        // 动画效果
+        UIView.animateWithDuration(0.25) { () -> Void in
+            self.view.layoutIfNeeded()
+        }
     }
     
     func trend() {
@@ -198,7 +270,22 @@ class CZComposeViewController: UIViewController {
     }
     
     func emoticon() {
-        print("表情")
+         print("切换前表情键盘:\(textView.inputView)")
+        // 先让键盘退回去
+        textView.resignFirstResponder()
+        // 延时0.25
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(250 * USEC_PER_SEC)), dispatch_get_main_queue()) { () -> Void in
+            // 如果inputView == nil 使用的是系统的键盘,切换到自定的键盘
+            // 如果inputView != nil 使用的是自定义键盘,切换到系统的键盘
+            self.textView.inputView = self.textView.inputView == nil ? self.emoticonVC.view : nil
+            
+            // 弹出键盘
+            self.textView.becomeFirstResponder()
+            
+            print("切换后表情键盘:\(self.textView.inputView)")
+        }
+
+        
     }
     
     func add() {
@@ -237,12 +324,35 @@ class CZComposeViewController: UIViewController {
         // 设置占位文本
         textView.placeholder = "分享新鲜事..."
         // 设置顶部的偏移
-        textView.contentInset = UIEdgeInsets(top: 64, left: 0, bottom: 0, right: 0)
+//        textView.contentInset = UIEdgeInsets(top: 64, left: 0, bottom: 0, right: 0)
         // 设置控制器作为textView的代理来监听textView文本的改变
         textView.delegate = self
         return textView
     }()
+    
+    /// 表情键盘控制器
+    private lazy var emoticonVC: CZEmoticonViewController = {
+        let emoticonVC = CZEmoticonViewController()
+         // 设置textView
+        emoticonVC.textView = self.textView
+        return emoticonVC
+    }()
+    /// 显示微博剩余长度
+    private lazy var lengthTipLabel: UILabel = {
+        let label = UILabel(fontSize: 12, textColor: UIColor.lightGrayColor())
+        label.text = String(self.statusMaxLength)
+        return label
+    }()
+    /// 照片选择器的控制器
+    private lazy var photoSelectorVC: CZPhotoSelectorViewController = {
+        let photoSelectorVC = CZPhotoSelectorViewController()
+        // 让照片选择控制器被被人管理
+        self.addChildViewController(photoSelectorVC)
+        return photoSelectorVC
+    }()
 }
+
+
 
 extension CZComposeViewController: UITextViewDelegate {
     /// textView文本改变的时候调用
@@ -250,5 +360,11 @@ extension CZComposeViewController: UITextViewDelegate {
         // 当textView 有文本的时候,发送按钮可用,
         // 当textView 没有文本的时候,发送按钮不可用
         navigationItem.rightBarButtonItem?.enabled = textView.hasText()
+        // 计算剩余微博的长度
+        let length = statusMaxLength - textView.emoticonText().characters.count // 注意此处使用emotionText,这样才能包含表情图片占的字符
+        
+        lengthTipLabel.text = String(length)
+        // 判断 length 大于等于0显示灰色, 小于0显示红色
+        lengthTipLabel.textColor = length < 0 ? UIColor.redColor() : UIColor.lightGrayColor()
     }
 }

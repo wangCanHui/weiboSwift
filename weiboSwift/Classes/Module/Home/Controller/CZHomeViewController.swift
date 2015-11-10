@@ -30,27 +30,49 @@ class CZHomeViewController: CZBaseViewController {
         
         setupNavigationBar()
         prepareTableView()
-        
-        // 默认高度60,宽度是屏幕的宽度
-        // 自定义 UIRefreshControl,在 自定义的UIRefreshControl添加自定义的view
-        refreshControl = CZRefreshControl()
-        // 添加下拉刷新响应事件
-        refreshControl?.addTarget(self, action: "loadData", forControlEvents: UIControlEvents.ValueChanged)
-        
-        // 调用beginRefreshing，使第一次进入首页时显示刷新,但是不会触发 ValueChanged 事件,只会让刷新控件进入刷新状态
-        refreshControl?.beginRefreshing()
-        // 代码触发 refreshControl 的 ValueChanged 事件
-        refreshControl?.sendActionsForControlEvents(UIControlEvents.ValueChanged)
-        
+        // 监听微博发送成功后的通知
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "sendStatusSuccess", name: CZComposeViewControllerSendStatusSuccessNotification, object: nil)
+        // 注册配图点击后的通知
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "selectedPicture:", name: CZStatusPictureViewCellSelectedPictureNotification, object: nil)
+        // 注册popoverVC消失后的通知
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "popoverDismiss", name: "PopoverDismiss", object: nil)
     }
     
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    /// 微博发送成功后的接收到通知调用的方法
+    func sendStatusSuccess() {
+        // 微博发送成功下拉刷新
+        loadData()
+    }
+    /// 配图视图 cell 点击的 处理方法
+    func selectedPicture(notification: NSNotification) {
+        let userInfo = notification.userInfo
+        guard let urls = userInfo?[CZStatusPictureViewCellSelectedPictureURLKey] as? [NSURL] else {
+            print("urls有问题")
+            return
+        }
+        guard let selectedIndex = userInfo?[CZStatusPictureViewCellSelectedPictureIndexKey] as? Int else {
+            print("selectedIndex有问题")
+            return
+        }
+         // 弹出控制器
+        let photoBrowserVC = CZPhotoBrowserViewController(urls: urls, selectedIndex: selectedIndex)
+        presentViewController(photoBrowserVC, animated: true, completion: nil)
+    }
+    // 监听popoverVC消失后的通知方法
+    func popoverDismiss() {
+        let button = navigationItem.titleView as! CZHomeTitleButton
+        homeTitleButtonClick(button)
+    }
     /*
     since_id	int64	若指定此参数，则返回ID比since_id大的微博（即比since_id时间晚的微博），默认为0。
     max_id	int64	若指定此参数，则返回ID小于或等于max_id的微博，默认为0。
     */
     
     /// 下拉刷新响应事件
-   @objc private func loadData() {
+    func loadData() {
         // TODO: 测试获取微博数据
         print("加载微博数据")
         // 默认下拉刷新,获取id最大的微博, 如果没有数据,就默认值0,加载20条微博数据
@@ -66,22 +88,22 @@ class CZHomeViewController: CZBaseViewController {
         
         
         CZStatus.loadStatus(since_id, max_id: max_id) { (statuses, error) -> Void in
-             // 关闭下拉刷新控件
+            // 关闭下拉刷新控件
             self.refreshControl?.endRefreshing()
-             // 将上拉菊花停止
+            // 将上拉菊花停止
             self.pullUpView.stopAnimating()
-          
+            
             if (error != nil){
                 SVProgressHUD.showErrorWithStatus("加载微博数据失败,网络不给力", maskType: SVProgressHUDMaskType.Black)
                 return
             }
-             // 能到下面来说明没有错误
+            // 能到下面来说明没有错误
             // 下拉刷新,显示加载了多少条微博
             if since_id > 0 {
                 let count = statuses?.count ?? 0
                 self.showTipView(count)
             }
-           
+            
             if statuses == nil || statuses?.count == 0 {
                 SVProgressHUD.showInfoWithStatus("没有新的微博数据", maskType: SVProgressHUDMaskType.Black)
                 return
@@ -96,10 +118,11 @@ class CZHomeViewController: CZBaseViewController {
             }else {
                 // 首次进入首页有微博数据,赋值给空的微博模型数组
                 self.statuses = statuses
-                print("首次进入首页获取\(statuses?.count)条微博")            }
+                print("首次进入首页获取\(statuses?.count)条微博")
+            }
             
         }
-
+        
     }
     
     /// 显示下拉刷新加载了多少条微博
@@ -151,6 +174,18 @@ class CZHomeViewController: CZBaseViewController {
 //        tableView.rowHeight = UITableViewAutomaticDimension
         // 消除分割线
         tableView.separatorStyle = UITableViewCellSeparatorStyle.None
+        
+        // 默认高度60,宽度是屏幕的宽度
+        // 自定义 UIRefreshControl,在 自定义的UIRefreshControl添加自定义的view
+        refreshControl = CZRefreshControl()
+        // 添加下拉刷新响应事件
+        refreshControl?.addTarget(self, action: "loadData", forControlEvents: UIControlEvents.ValueChanged)
+        
+        // 调用beginRefreshing，使第一次进入首页时显示刷新,但是不会触发 ValueChanged 事件,只会让刷新控件进入刷新状态
+        refreshControl?.beginRefreshing()
+        // 代码触发 refreshControl 的 ValueChanged 事件
+        refreshControl?.sendActionsForControlEvents(UIControlEvents.ValueChanged)
+
     }
     
     // MARK: - 设置导航栏
@@ -174,24 +209,6 @@ class CZHomeViewController: CZBaseViewController {
         self.navigationItem.titleView = button
     }
     
-    // OC可以访问 private方法
-    @objc private func homeTitleButtonClick(button: CZHomeTitleButton) {
-        button.selected = !button.selected
-        
-        var transform: CGAffineTransform?
-        if button.selected {
-            transform = CGAffineTransformMakeRotation(CGFloat(M_PI - 0.01))
-        } else {
-            transform = CGAffineTransformIdentity
-        }
-        
-        // 动画
-        UIView.animateWithDuration(0.25) { () -> Void in
-            button.imageView?.transform = transform!
-        }
-        
-        
-    }
     
     // MARK: - Table view data source
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -249,5 +266,58 @@ class CZHomeViewController: CZBaseViewController {
         return indicator
     }()
     
-    
 }
+
+// MARK: - 扩展 CZHomeTableViewController 实现 UIViewControllerTransitioningDelegate 协议
+extension CZHomeViewController: UIViewControllerTransitioningDelegate {
+    // OC可以访问 private方法
+    @objc private func homeTitleButtonClick(button: CZHomeTitleButton) {
+        button.selected = !button.selected
+        
+        var transform: CGAffineTransform?
+        if button.selected {
+            transform = CGAffineTransformMakeRotation(CGFloat(M_PI - 0.01))
+        } else {
+            transform = CGAffineTransformIdentity
+        }
+        
+        // 动画
+        UIView.animateWithDuration(0.25) { () -> Void in
+            button.imageView?.transform = transform!
+        }
+        
+        // 如果按钮时选中的就弹出控制器
+        if button.selected {
+            // 创建storyboard
+            let popoverSB = UIStoryboard(name: "Popover", bundle: nil)
+            let popoverVC = popoverSB.instantiateViewControllerWithIdentifier("popoverController")
+            // 实现自定义modal转场动画
+            // 设置转场代理
+            popoverVC.transitioningDelegate = self
+            // 设置控制器的modal展现
+            popoverVC.modalPresentationStyle = UIModalPresentationStyle.Custom
+            presentViewController(popoverVC, animated: true, completion: nil)
+        }
+    }
+    
+    // 返回一个 控制展现(显示) 的对象
+    func presentationControllerForPresentedViewController(presented: UIViewController, presentingViewController presenting: UIViewController, sourceViewController source: UIViewController) -> UIPresentationController? {
+        // 记得用构造方法初始化对象
+        return CZPresentationController(presentedViewController: presented, presentingViewController: presenting)
+    }
+     // 返回控制 modal时动画 的对象
+    func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        // 自定义对象实现 UIViewControllerAnimatedTransitioning协议 即可
+        return CZModalAnimation()
+    }
+     // 返回一个 控制dismiss时的动画对象
+    func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        // 自定义对象实现 UIViewControllerAnimatedTransitioning协议 即可
+        return CZDismissAnimation()
+    }
+}
+
+
+
+
+

@@ -49,6 +49,7 @@ class CZStatusCell: UITableViewCell {
      // MARK: - 构造函数
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+//        backgroundColor = UIColor.redColor()
         prepareUI()
     }
 
@@ -66,11 +67,13 @@ class CZStatusCell: UITableViewCell {
         
         // 设置约束
         // 1. topView
-        topView.ff_AlignInner(type: ff_AlignType.TopLeft, referView: contentView, size: CGSizeMake(UIScreen.mainScreen().bounds.width, 54))
+        topView.ff_AlignInner(type: ff_AlignType.TopLeft, referView: contentView, size: CGSizeMake(UIScreen.width(), 54))
         // 2 .微博内容
         contentLabel.ff_AlignVertical(type: ff_AlignType.BottomLeft, referView: topView, size: nil, offset: CGPointMake(StatusCellMargin, StatusCellMargin))
         // 设置宽度
-        contentView.addConstraint(NSLayoutConstraint(item: contentLabel, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: contentView, attribute: NSLayoutAttribute.Width, multiplier: 1, constant: -StatusCellMargin*2))
+//        contentView.addConstraint(NSLayoutConstraint(item: contentLabel, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: contentView, attribute: NSLayoutAttribute.Width, multiplier: 1, constant: -StatusCellMargin*2))
+        // 不能使用上面的约束方法,来约束contentLabel得宽度，会导致部分cell的高度改变，底部留下空白，原因不明
+          contentView.addConstraint(NSLayoutConstraint(item: contentLabel, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: nil, attribute: NSLayoutAttribute.NotAnAttribute, multiplier: 1, constant: UIScreen.width() - 2 * StatusCellMargin))
         
         // 微博配图
         // 因为转发微博需要设置配图约束,不能再这里设置配图的约束,需要在创建一个cell继承CZStatusCell,添加上配图的约束
@@ -81,8 +84,7 @@ class CZStatusCell: UITableViewCell {
 //        pictureViewHeightCons = pictureView.ff_Constraint(cons, attribute: NSLayoutAttribute.Height)
         
         // 3. bottomView
-        bottomView.ff_AlignVertical(type: ff_AlignType.BottomLeft, referView: pictureView, size: CGSizeMake(UIScreen.width(), 35), offset: CGPointMake(-StatusCellMargin, StatusCellMargin))
-        
+        bottomView.ff_AlignVertical(type: ff_AlignType.BottomLeft, referView: pictureView, size: CGSizeMake(UIScreen.width(), 44), offset: CGPointMake(-StatusCellMargin, StatusCellMargin))
         
         // 3. 添加contentView底部和bottomView的底部重合
 //        contentView.addConstraint(NSLayoutConstraint(item: contentView, attribute: NSLayoutAttribute.Bottom, relatedBy: NSLayoutRelation.Equal, toItem: bottomView, attribute: NSLayoutAttribute.Bottom, multiplier: 1, constant: StatusCellMargin))

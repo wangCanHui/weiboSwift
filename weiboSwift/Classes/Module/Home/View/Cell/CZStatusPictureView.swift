@@ -9,6 +9,14 @@
 import UIKit
 import SDWebImage
 
+// 在类外面全局的,任何地方都可以访问
+/// 点击cell通知的名称
+let CZStatusPictureViewCellSelectedPictureNotification = "CZStatusPictureViewCellSelectedPictureNotification"
+
+let CZStatusPictureViewCellSelectedPictureURLKey = "CZStatusPictureViewCellSelectedPictureURLKey"
+
+let CZStatusPictureViewCellSelectedPictureIndexKey = "CZStatusPictureViewCellSelectedPictureIndexKey"
+
 class CZStatusPictureView: UICollectionView {
 
     // MARK: - 属性
@@ -69,7 +77,8 @@ class CZStatusPictureView: UICollectionView {
         
         // 4 张图片
         if count == 4 {
-          return  CGSizeMake(itemSize.width*2 + margin, itemSize.height*2 + margin)
+            let width = 2 * itemSize.width + margin
+            return CGSize(width: width, height: width)
         }
         
         let column = 3
@@ -84,6 +93,7 @@ class CZStatusPictureView: UICollectionView {
         let height = CGFloat(row) * itemSize.height + CGFloat(row - 1) * margin
         
         return CGSizeMake(width, height)
+        
     }
     
     // MARK: - 构造函数
@@ -98,13 +108,15 @@ class CZStatusPictureView: UICollectionView {
         backgroundColor = UIColor.clearColor()
         // 设置数据源
         dataSource = self
+        // 设置代理
+        delegate = self
         // 注册cell
         registerClass(CZStatusPictureViewCell.self, forCellWithReuseIdentifier: statusPictureIdentifier)
         
     }
 }
-// MARK: - 扩展 CZStatusPictureView 类,实现 UICollectionViewDataSource协议
-extension CZStatusPictureView: UICollectionViewDataSource {
+// MARK: - 扩展 CZStatusPictureView 类,实现 UICollectionViewDataSource,UICollectionViewDelegate协议
+extension CZStatusPictureView: UICollectionViewDataSource ,UICollectionViewDelegate{
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 //        let name = status?.user?.name
@@ -126,6 +138,33 @@ extension CZStatusPictureView: UICollectionViewDataSource {
         return cell
     }
     
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        //print("所有url地址:\(status?.largePictureURLs)")
+        // 点击的哪个cell
+        // indexPath.item
+        // 代理,闭包,通知
+        /*
+        代理:
+        1. 1对1 (xmpp的可以一对多)
+        2. 嵌套层次不是很深
+        3. 代理可以有返回值
+        通知:
+        1. 1对多
+        2. 嵌套层次无所谓
+        3. 无法获取返回值
+        */
+        
+        // 想把 url 和 点击的indexPath.item传给控制器
+        
+        let userInfo: [String: NSObject] = [
+            CZStatusPictureViewCellSelectedPictureURLKey: status!.largePictureUrls!,
+            CZStatusPictureViewCellSelectedPictureIndexKey: indexPath.item
+        ]
+        
+        NSNotificationCenter.defaultCenter().postNotificationName(CZStatusPictureViewCellSelectedPictureNotification, object: self, userInfo: userInfo)
+    }
+    
+    
 }
 // 自定义cell  显示图片
 class CZStatusPictureViewCell: UICollectionViewCell {
@@ -133,6 +172,9 @@ class CZStatusPictureViewCell: UICollectionViewCell {
     var imageUrl: NSURL? {
         didSet {
             iconView.cz_setImageWithURL(imageUrl)
+            // 判断是否是gif图片
+            let isGif = (imageUrl!.absoluteString as NSString).pathExtension.lowercaseString == "gif"
+            gifImageView.hidden = !isGif
         }
     }
     
@@ -149,11 +191,12 @@ class CZStatusPictureViewCell: UICollectionViewCell {
     private func prepareUI() {
         // 添加子控件
         contentView.addSubview(iconView)
+        contentView.addSubview(gifImageView)
         
         // 设置约束
         // 填充父控件
         iconView.ff_Fill(contentView)
-        
+        gifImageView.ff_AlignInner(type: ff_AlignType.BottomRight, referView: contentView, size: nil)
     }
     
     // MARK: - 懒加载
@@ -165,5 +208,6 @@ class CZStatusPictureViewCell: UICollectionViewCell {
         iconView.clipsToBounds = true
         return iconView
     }()
-    
+     /// gif标示
+    private lazy var gifImageView = UIImageView(image: UIImage(named: "timeline_image_gif"))
 }

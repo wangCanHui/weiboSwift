@@ -26,8 +26,8 @@ class CZStatus: NSObject {
     
     /// 微博来源
     var source: String?
-    
-    /// 微博的配图
+
+    /// 微博的配图，此属性前不能加private，如果加的话使用KVC字典转模型的时候就找不到这个属性了；
     var pic_urls: [[String: AnyObject]]? {
         didSet {
             // 当字典转模型,给pic_urls赋值的时候,将数组里面的url转成NSURL赋值给storePictureURLs
@@ -39,19 +39,30 @@ class CZStatus: NSObject {
                 return
             }
             // 有图片
-             // 创建storePictureURLs
+            // 创建storePictureUrls,保存缩略图的url地址
             storePictureUrls = [NSURL]()
+            // 保存大图的url地址
+            largeStorePictureUrls = [NSURL]()
             for dict in pic_urls! {
                 if let urlStr = dict["thumbnail_pic"] as? String {
+                    // 有url地址,创建缩略图NSURL
                     let url = NSURL(string: urlStr)
                     storePictureUrls?.append(url!)
+                    
+                    // 创建大图NSURL, 将小图的url地址中的 thumbnail 替换为 large
+                    let largeUrlStr = urlStr.stringByReplacingOccurrencesOfString("thumbnail", withString: "large")
+                    largeStorePictureUrls?.append(NSURL(string: largeUrlStr)!)
+                    
                 }
             }
             
         }
     }
     /// 返回 微博的配图 对应的URL数组
-    var storePictureUrls: [NSURL]?
+    private var storePictureUrls: [NSURL]?
+    
+    /// 返回 微博的配图 对应的大图URL数组
+    private var largeStorePictureUrls: [NSURL]?
     
     /// 如果是原创微博,就返回原创微博的图片,如果是转发微博就返回被转发微博的图片
     /// 计算型属性,
@@ -63,6 +74,18 @@ class CZStatus: NSObject {
             return retweeted_status == nil ? storePictureUrls : retweeted_status!.storePictureUrls
         }
     }
+    
+    /// 如果是原创微博,就返回原创微博的大图URL,如果是转发微博就返回被转发微博的大图URL
+    /// 计算型属性,
+    var largePictureUrls: [NSURL]? {
+        get {
+            // 判断:
+            // 1.原创微博: 返回 largeStorePictureUrls
+            // 2.转发微博: 返回 retweeted_status.largeStorePictureUrls
+            return retweeted_status == nil ? largeStorePictureUrls : retweeted_status!.largeStorePictureUrls
+        }
+    }
+
     
     /// 用户模型
     var user: CZUser?
@@ -115,7 +138,7 @@ class CZStatus: NSObject {
     override func setValue(value: AnyObject?, forUndefinedKey key: String) {}
     
     override var description: String {
-        let keys = ["created_at", "idstr", "text", "source", "pic_urls", "user","pictureUrls"]
+        let keys = ["created_at", "id", "text", "source", "pic_urls", "user","pictureUrls"]
         // 数组里面的每个元素,依据属性找到对应的value,拼接成字典
         // \n 换行, \t table
         return "\n\t微博模型：\(dictionaryWithValuesForKeys(keys))"
@@ -140,12 +163,13 @@ class CZStatus: NSObject {
                 
                 for dict in dicts {
                     let status = CZStatus(dict: dict)
+//                    print("status\(status)")
                     statuses.append(status)
                 }
                 // 字典转模型完成
                 // 缓存图片，通知调用者
                 cacheWebImage(statuses, finished: finished)
-                finished(statuses: statuses, error: nil)
+//                finished(statuses: statuses, error: nil) 这里不能再回调了，在cacheWebImage方法最后回调
             }
             else {
                 // 没有数据,通知调用者

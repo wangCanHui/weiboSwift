@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+//import SDWebImage
 /// 隔离SDWebImage
 extension UIImageView {
     func cz_setImageWithURL(url: NSURL!) {
@@ -16,6 +16,7 @@ extension UIImageView {
     
     func cz_setImageWithURL(url: NSURL!, placeholderImage placeholder: UIImage!) {
         sd_setImageWithURL(url, placeholderImage :placeholder )
+        sd_cancelCurrentAnimationImagesLoad()
     }
     
 }

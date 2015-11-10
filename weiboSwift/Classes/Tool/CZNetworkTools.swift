@@ -197,7 +197,54 @@ class CZNetworkTools: NSObject {
         }
         
     }
-
+    // MARK: - 发布微博
+    /**
+    发布微博
+    - parameter image:   微博图片,可能有可能没有
+    - parameter status:   微博文本内容
+    - parameter finished: 回调闭包
+    */
+    func sendStatus(image: UIImage?,status: String,finished:netWorkFinishedCallBack) {
+        // 判断token
+        guard var parameters = tokenDict() else {
+            // 能到这里来说明token没有值
+            
+            // 告诉调用者
+            finished(result: nil, error: CZNetworkError.emptyToken.error())
+            return
+        }
+         // token有值, 拼接参数
+        parameters["status"] = status
+        // 判断是否有图片
+        if (image != nil) {
+            // 有图片,发送带图片的微博
+            let urlString = "https://upload.api.weibo.com/2/statuses/upload.json"
+            afnManager.POST(urlString, parameters: parameters, constructingBodyWithBlock: { (formData) -> Void in
+                let data = UIImagePNGRepresentation(image!)
+                // data: 上传图片的2进制
+                // name: api 上面写的传递参数名称 "pic"
+                // fileName: 上传到服务器后,保存的名称,没有指定可以随便写
+                // mimeType: 资源类型:
+                // image/png
+                // image/jpeg
+                // image/gif
+                formData.appendPartWithFileData(data!, name: "pic", fileName: "sb", mimeType: "image/png")
+                }, success: { (_, result) -> Void in
+                    finished(result: result as? [String: AnyObject], error: nil)
+                }, failure: { (_, error) -> Void in
+                    finished(result: nil, error: error)
+            })
+        } else {
+            // url
+            let urlString = "2/statuses/update.json"
+            // 没有图片
+            afnManager.POST(urlString, parameters: parameters, success: { (_, result) -> Void in
+                finished(result: result as? [String: AnyObject], error: nil)
+                }, failure: { (_, error) -> Void in
+                finished(result: nil, error: error)
+            })
+        }
+    }
     
     // MARK: - 封装AFN.GET
     func requestGET(urlString: String, parameters: AnyObject?,finished:(result: [String: AnyObject]?,error: NSError?) -> Void) {
