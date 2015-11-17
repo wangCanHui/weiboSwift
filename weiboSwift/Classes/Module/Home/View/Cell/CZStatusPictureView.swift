@@ -13,7 +13,7 @@ import SDWebImage
 /// 点击cell通知的名称
 let CZStatusPictureViewCellSelectedPictureNotification = "CZStatusPictureViewCellSelectedPictureNotification"
 
-let CZStatusPictureViewCellSelectedPictureURLKey = "CZStatusPictureViewCellSelectedPictureURLKey"
+let CZStatusPictureViewCellSelectedPictureModelsKey = "CZStatusPictureViewCellSelectedPictureModelsKey"
 
 let CZStatusPictureViewCellSelectedPictureIndexKey = "CZStatusPictureViewCellSelectedPictureIndexKey"
 
@@ -67,6 +67,10 @@ class CZStatusPictureView: UICollectionView {
             // 当有图片的时候在来赋值
             if image != nil {
                 size = image.size
+            }
+            // 如果图片宽度太小
+            if size.width < 40 {
+                size.width = 40
             }
             layout.itemSize = size
             return size
@@ -156,8 +160,24 @@ extension CZStatusPictureView: UICollectionViewDataSource ,UICollectionViewDeleg
         
         // 想把 url 和 点击的indexPath.item传给控制器
         
+        // 提供模型
+        var models = [CZPhotoBrowserModel]()
+        let count = status?.largePictureUrls?.count ?? 0
+        for i in 0..<count {
+             // 创建模型
+            let model = CZPhotoBrowserModel()
+            // 获取大图的url
+            model.url = status?.largePictureUrls?[i]
+            let cell = collectionView.cellForItemAtIndexPath(NSIndexPath(forItem: i, inSection: 0)) as! CZStatusPictureViewCell
+            // 获取显示的imageView
+            model.imageView = cell.iconView
+            
+            models.append(model)
+        }
+        
+        
         let userInfo: [String: NSObject] = [
-            CZStatusPictureViewCellSelectedPictureURLKey: status!.largePictureUrls!,
+            CZStatusPictureViewCellSelectedPictureModelsKey: models,
             CZStatusPictureViewCellSelectedPictureIndexKey: indexPath.item
         ]
         

@@ -16,7 +16,7 @@ extension UIImageView {
     
     func cz_setImageWithURL(url: NSURL!, placeholderImage placeholder: UIImage!) {
         sd_setImageWithURL(url, placeholderImage :placeholder )
-        sd_cancelCurrentAnimationImagesLoad()
+//        sd_cancelCurrentAnimationImagesLoad()
     }
     
 }

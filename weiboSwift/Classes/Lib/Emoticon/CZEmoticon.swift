@@ -268,4 +268,108 @@ class CZEmoticon: NSObject {
     override var description: String {
         return "\n\t\t表情模型: chs: \(chs), png: \(png), code: \(code))"
     }
+    
+    // MARK: - 将表情模型转成带表情图片的属性文本
+    /// 将表情模型转成带表情图片的属性文本
+    func emoticonToAttrString(font: UIFont) -> NSAttributedString {
+        guard let pngP = pngPath else {
+            print("没有图片")
+            return NSAttributedString(string: "")
+        }
+        
+        // 创建附件
+        let attachment = CZTextAttachment()
+        
+        // 创建 image
+        let image = UIImage(contentsOfFile: pngP)
+        
+        // 将 image 添加到附件
+        attachment.image = image
+        
+        // 将表情图片的名称赋值
+        attachment.name = chs
+        
+        // 获取font的高度
+        let height = font.lineHeight ?? 10
+        
+        // 设置附件大小
+        attachment.bounds = CGRect(x: 0, y: -(height * 0.25), width: height, height: height)
+        
+        // 创建属性文本
+        let attrString = NSMutableAttributedString(attributedString: NSAttributedString(attachment: attachment))
+        
+        // 发现在表情图片后面在添加表情会很小.原因是前面的这个表请缺少font属性
+        // 给属性文本(附件) 添加 font属性
+        attrString.addAttribute(NSFontAttributeName, value: font, range: NSRange(location: 0, length: 1))
+        return attrString
+    }
+    
+    /// 根据表情文本找到对应的表情模型
+    class func emoticonStringToEmoticon(emoticonString: String) -> CZEmoticon? {
+        // 接收查找的结果
+        var emoticon: CZEmoticon?
+        
+        // 遍历所有的表情模型,判断表情模型的名称 = emoticonString
+        for package in CZEmoticonPackage.packages {
+            // 获取对应的表情包
+            let result = package.emoticons?.filter({ (e1) -> Bool in
+                // 判断表情模型的表情名称是否等于 emoticonString
+                // 满足条件的元素会放到数组里面作为返回结果
+                return e1.chs == emoticonString
+            })
+            
+            emoticon = result?.first
+            
+            // 有结果就不需要在遍历了
+            if emoticon != nil {
+                break
+            }
+        }
+        
+        return emoticon
+    }
+    
+    /**
+     表情字符串转带表情图片的属性文本
+     - parameter string: 表情字符串
+     - returns: 带表情图片的属性文本
+     */
+    class func emoticonStringToEmoticonAttrString(string: String, font: UIFont) -> NSAttributedString {
+        // 1.解析字符串中表情文本
+        // 2.根据表情文本找到对应的表情模型(表情模型里面有表情图片的完整路径) *
+        // 3.将表情模型转成带表情图片的属性文本 *
+        // 4.将 表情文本 替换成 表情图片的属性文本
+        
+        // 解析字符串中表情文本 使用正则表达式
+        let pattern = "\\[.*?\\]"
+        let regular = try! NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions.DotMatchesLineSeparators)
+        
+        // 查找 string中的表情字符串
+        let results = regular.matchesInString(string, options: NSMatchingOptions(rawValue: 0), range: NSRange(location: 0, length: string.characters.count))
+        
+        // 将传进来的文本转成属性文本
+        let attrText = NSMutableAttributedString(string: string)
+        
+        // 反过来替换文本
+        var count = results.count
+        while count > 0 {
+            // 从最后开始获取范围
+            let result = results[--count]
+            //            print("结果数量:\(result.numberOfRanges): result:\(result)")
+            let range = result.rangeAtIndex(0)
+            
+            // 获取到对应的表情文本
+            let emoticonString = (string as NSString).substringWithRange(range)
+            
+            // 根据表情文本找到对应的表情模型
+            if let emoticon = CZEmoticon.emoticonStringToEmoticon(emoticonString) {
+                // 将表情模型转成带表情图片的属性文本
+                let attrString = emoticon.emoticonToAttrString(font)
+                // 将 表情文本 替换成 表情图片的属性文本
+                attrText.replaceCharactersInRange(range, withAttributedString: attrString)
+            }
+        }
+        
+        return attrText
+    }
 }

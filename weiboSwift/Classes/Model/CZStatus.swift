@@ -22,10 +22,23 @@ class CZStatus: NSObject {
     var id: Int = 0
     
     /// 微博信息内容
-    var text: String?
+//    var text: String?
+    var text: String? {
+        didSet {
+            attrText = CZEmoticon.emoticonStringToEmoticonAttrString(text!, font: UIFont.systemFontOfSize(16))
+        }
+    }
+    
+    /// 微博信息内容带表情图片
+    var attrText: NSAttributedString?
     
     /// 微博来源
-    var source: String?
+    var source: String? {
+        didSet {
+             // 修改来源, 在didSet方法在次修改属性是不会调用属性监视器
+            source = source?.linkSource() ?? "未知"
+        }
+    }
 
     /// 微博的配图，此属性前不能加private，如果加的话使用KVC字典转模型的时候就找不到这个属性了；
     var pic_urls: [[String: AnyObject]]? {
@@ -147,7 +160,8 @@ class CZStatus: NSObject {
     /// 加载微博数据
     /// 没有模型对象就能加载数据
     class func loadStatus(since_id: Int,max_id: Int,finished: (statuses: [CZStatus]?,error: NSError?) -> Void) {
-        CZNetworkTools.sharedInstance.loadStatus(since_id, max_id: max_id) { (result, error) -> Void in
+        // 通过DAL来加载数据
+        CZStatusDAL.sharedInstance.loadStatus(since_id, max_id: max_id) { (array, error) -> () in
             
             if  error != nil {
                 print("error:\(error)")
@@ -156,20 +170,20 @@ class CZStatus: NSObject {
                 return
             }
             // 判断是否有数据
-            if let dicts = result!["statuses"] as? [[String: AnyObject]] // [[String: AnyObject]]表示字典数组，即数组中的元素是[String: AnyObject]类型的字典
+            if array != nil
             {
                 // 有数据,创建模型数组
                 var statuses = [CZStatus]()
                 
-                for dict in dicts {
+                for dict in array! {
                     let status = CZStatus(dict: dict)
-//                    print("status\(status)")
+                    //                    print("status\(status)")
                     statuses.append(status)
                 }
                 // 字典转模型完成
                 // 缓存图片，通知调用者
                 cacheWebImage(statuses, finished: finished)
-//                finished(statuses: statuses, error: nil) 这里不能再回调了，在cacheWebImage方法最后回调
+                //                finished(statuses: statuses, error: nil) 这里不能再回调了，在cacheWebImage方法最后回调
             }
             else {
                 // 没有数据,通知调用者
@@ -177,6 +191,38 @@ class CZStatus: NSObject {
             }
             
         }
+        // 使用网络工具类加载微博数据
+        // 尾随闭包,当尾随闭包前面没有参数的时候()可以省略
+//        CZNetworkTools.sharedInstance.loadStatus(since_id, max_id: max_id) { (result, error) -> Void in
+//            
+//            if  error != nil {
+//                print("error:\(error)")
+//                // 通知调用者
+//                finished(statuses: nil, error: error)
+//                return
+//            }
+//            // 判断是否有数据
+//            if let dicts = result!["statuses"] as? [[String: AnyObject]] // [[String: AnyObject]]表示字典数组，即数组中的元素是[String: AnyObject]类型的字典
+//            {
+//                // 有数据,创建模型数组
+//                var statuses = [CZStatus]()
+//                
+//                for dict in dicts {
+//                    let status = CZStatus(dict: dict)
+////                    print("status\(status)")
+//                    statuses.append(status)
+//                }
+//                // 字典转模型完成
+//                // 缓存图片，通知调用者
+//                cacheWebImage(statuses, finished: finished)
+////                finished(statuses: statuses, error: nil) 这里不能再回调了，在cacheWebImage方法最后回调
+//            }
+//            else {
+//                // 没有数据,通知调用者
+//                finished(statuses: nil, error: nil)
+//            }
+//            
+//        }
     }
     
     /// 缓存图片，通知调用者

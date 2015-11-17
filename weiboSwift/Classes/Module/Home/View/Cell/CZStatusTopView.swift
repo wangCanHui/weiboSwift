@@ -28,10 +28,10 @@ class CZStatusTopView: UIView {
             nameLabel.text = status?.user?.name
             
             // 时间
-            timeLabel.text = status?.created_at
+            timeLabel.text = NSDate.sinaStringToDate(status?.created_at ?? "").sinaDateDescription()
             
             // 来源
-            sourceLabel.text = "来自 ** 微博"
+            sourceLabel.text = status?.source
             
             // 会员
             memberView.image = status?.user?.mbrankImage

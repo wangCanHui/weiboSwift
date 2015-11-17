@@ -18,6 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // 设置全局的属性，今早设置
         setupAppearance()
+        print(NSHomeDirectory())
+        
+        // 打开数据库
+        CZSQLiteManager.sharedManager
+        print(CZUserAccount.loadAccount())
         
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         

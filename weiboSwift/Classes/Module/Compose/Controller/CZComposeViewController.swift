@@ -180,7 +180,7 @@ class CZComposeViewController: UIViewController {
         */
         // scrollView会自动设置Insets, 比如scrollView所在的控制器属于某个导航控制器contentInset.top = 64
         //        automaticallyAdjustsScrollViewInsets = true  // Defaults to YES
-
+        
         // 设置约束
          // 相对控制器的view的内部左上角
         textView.ff_AlignInner(type: ff_AlignType.TopLeft, referView: view, size: nil)

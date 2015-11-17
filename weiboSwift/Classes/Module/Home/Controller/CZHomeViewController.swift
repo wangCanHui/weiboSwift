@@ -10,7 +10,7 @@ import UIKit
 import AFNetworking
 import SVProgressHUD
 
-class CZHomeViewController: CZBaseViewController {
+class CZHomeViewController: CZBaseViewController , CZStatusCellDelegate{
 
     // MARK: - 属性
     /// 微博模型数组
@@ -49,7 +49,7 @@ class CZHomeViewController: CZBaseViewController {
     /// 配图视图 cell 点击的 处理方法
     func selectedPicture(notification: NSNotification) {
         let userInfo = notification.userInfo
-        guard let urls = userInfo?[CZStatusPictureViewCellSelectedPictureURLKey] as? [NSURL] else {
+        guard let models = userInfo?[CZStatusPictureViewCellSelectedPictureModelsKey] as? [CZPhotoBrowserModel] else {
             print("urls有问题")
             return
         }
@@ -58,7 +58,12 @@ class CZHomeViewController: CZBaseViewController {
             return
         }
          // 弹出控制器
-        let photoBrowserVC = CZPhotoBrowserViewController(urls: urls, selectedIndex: selectedIndex)
+        let photoBrowserVC = CZPhotoBrowserViewController(photoModels: models, selectedIndex: selectedIndex)
+        // 设置代理，自身做代理，因为当前控制器已作为popoverView的transitioningDelegate，不能再作为photoBrowserVC的代理了
+        photoBrowserVC.transitioningDelegate = photoBrowserVC
+         // 设置modal样式
+        photoBrowserVC.modalPresentationStyle = UIModalPresentationStyle.Custom
+        
         presentViewController(photoBrowserVC, animated: true, completion: nil)
     }
     // 监听popoverVC消失后的通知方法
@@ -223,6 +228,8 @@ class CZHomeViewController: CZBaseViewController {
         // 设置cell的模型
         cell.status = status
         
+        // 设置代理
+        cell.cellDelegate = self
         // 当最后一个cell显示的时候来加载更多微博数据
         // 如果菊花正在显示,就表示正在加载数据,就不加载数据
         if indexPath.row == statuses!.count - 1 && !pullUpView.isAnimating() {
@@ -255,6 +262,16 @@ class CZHomeViewController: CZBaseViewController {
         status.rowHeight = rowHeight
         
         return rowHeight
+        
+    }
+    
+    // MARK: - CZStatusCellDelegate方法
+    func urlClick(text: String) {
+        // 弹出webView控制器
+        let homeWebVC = CZHomeWebViewController()
+        homeWebVC.url = NSURL(string: text)
+        homeWebVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(homeWebVC, animated: true)
         
     }
     

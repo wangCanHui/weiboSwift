@@ -34,6 +34,14 @@
 		6F4B74C61BECF07000E33A66 /* CZTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4B74C11BECF07000E33A66 /* CZTextAttachment.swift */; };
 		6F4B74C71BECF07000E33A66 /* Emoticons.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6F4B74C21BECF07000E33A66 /* Emoticons.bundle */; };
 		6F4B74C81BECF07000E33A66 /* UITextView+Emoticon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4B74C31BECF07000E33A66 /* UITextView+Emoticon.swift */; };
+		6F8797AA1BF2CD9000F85485 /* CZPhotoBrowserModalAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8797A91BF2CD9000F85485 /* CZPhotoBrowserModalAnimation.swift */; };
+		6F8797AC1BF2D16200F85485 /* CZPhotoBrowserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8797AB1BF2D16200F85485 /* CZPhotoBrowserModel.swift */; };
+		6F8797AE1BF2DC0100F85485 /* CZPhotoBrowserDismissAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8797AD1BF2DC0100F85485 /* CZPhotoBrowserDismissAnimation.swift */; };
+		6F8797B01BF2E78900F85485 /* CZImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8797AF1BF2E78900F85485 /* CZImageView.swift */; };
+		6F8797B41BF33FE600F85485 /* FFLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8797B11BF33FE600F85485 /* FFLabel.swift */; };
+		6F8797B51BF33FE600F85485 /* NSDate+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8797B21BF33FE600F85485 /* NSDate+Extension.swift */; };
+		6F8797B61BF33FE600F85485 /* String+Regular.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8797B31BF33FE600F85485 /* String+Regular.swift */; };
+		6F8797B81BF3451B00F85485 /* CZHomeWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F8797B71BF3451B00F85485 /* CZHomeWebViewController.swift */; };
 		6FA9D93D1BE60BD600AAA1CA /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9D93C1BE60BD600AAA1CA /* UIButton+Extension.swift */; };
 		6FA9D93F1BE60D7900AAA1CA /* CZStatusBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9D93E1BE60D7900AAA1CA /* CZStatusBottomView.swift */; };
 		6FA9D9411BE612E900AAA1CA /* UIScreen+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA9D9401BE612E900AAA1CA /* UIScreen+Extension.swift */; };
@@ -52,6 +60,17 @@
 		6FE41CF41BDE442E00CA2E8A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6FE41CF31BDE442E00CA2E8A /* Assets.xcassets */; };
 		6FEA99E21BE98BF20020F50B /* CZComposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA99E11BE98BF20020F50B /* CZComposeViewController.swift */; };
 		6FEA99E41BEA420E0020F50B /* CZPlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEA99E31BEA420E0020F50B /* CZPlaceholderTextView.swift */; };
+		6FECE31E1BF62C7800E3CD6D /* tables.sql in Resources */ = {isa = PBXBuildFile; fileRef = 6FECE31D1BF62C7800E3CD6D /* tables.sql */; };
+		6FECE32E1BF62C9B00E3CD6D /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FECE3211BF62C9B00E3CD6D /* FMDatabase.m */; };
+		6FECE32F1BF62C9B00E3CD6D /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FECE3231BF62C9B00E3CD6D /* FMDatabaseAdditions.m */; };
+		6FECE3301BF62C9B00E3CD6D /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FECE3251BF62C9B00E3CD6D /* FMDatabasePool.m */; };
+		6FECE3311BF62C9B00E3CD6D /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FECE3271BF62C9B00E3CD6D /* FMDatabaseQueue.m */; };
+		6FECE3321BF62C9B00E3CD6D /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FECE32A1BF62C9B00E3CD6D /* FMResultSet.m */; };
+		6FECE3331BF62C9B00E3CD6D /* FMDatabaseAdditionsVariadic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FECE32C1BF62C9B00E3CD6D /* FMDatabaseAdditionsVariadic.swift */; };
+		6FECE3341BF62C9B00E3CD6D /* FMDatabaseVariadic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FECE32D1BF62C9B00E3CD6D /* FMDatabaseVariadic.swift */; };
+		6FECE33A1BF62DFB00E3CD6D /* CZSQLiteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FECE3381BF62DFB00E3CD6D /* CZSQLiteManager.swift */; };
+		6FECE33B1BF62DFB00E3CD6D /* CZStatusDAL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FECE3391BF62DFB00E3CD6D /* CZStatusDAL.swift */; };
+		6FECE33D1BF62E2E00E3CD6D /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FECE33C1BF62E2E00E3CD6D /* libsqlite3.tbd */; };
 		6FF2E5CA1BE6EAB70005D008 /* statuses.json in Resources */ = {isa = PBXBuildFile; fileRef = 6FF2E5C91BE6EAB70005D008 /* statuses.json */; };
 		6FF2E5CC1BE6F5820005D008 /* CZStatusNormalCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF2E5CB1BE6F5820005D008 /* CZStatusNormalCell.swift */; };
 		6FF42C6A1BE720D900DBC3C8 /* CZStatusForwardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF42C691BE720D900DBC3C8 /* CZStatusForwardCell.swift */; };
@@ -91,6 +110,14 @@
 		6F4B74C11BECF07000E33A66 /* CZTextAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CZTextAttachment.swift; sourceTree = "<group>"; };
 		6F4B74C21BECF07000E33A66 /* Emoticons.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Emoticons.bundle; sourceTree = "<group>"; };
 		6F4B74C31BECF07000E33A66 /* UITextView+Emoticon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextView+Emoticon.swift"; sourceTree = "<group>"; };
+		6F8797A91BF2CD9000F85485 /* CZPhotoBrowserModalAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CZPhotoBrowserModalAnimation.swift; sourceTree = "<group>"; };
+		6F8797AB1BF2D16200F85485 /* CZPhotoBrowserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CZPhotoBrowserModel.swift; sourceTree = "<group>"; };
+		6F8797AD1BF2DC0100F85485 /* CZPhotoBrowserDismissAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CZPhotoBrowserDismissAnimation.swift; sourceTree = "<group>"; };
+		6F8797AF1BF2E78900F85485 /* CZImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CZImageView.swift; sourceTree = "<group>"; };
+		6F8797B11BF33FE600F85485 /* FFLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FFLabel.swift; sourceTree = "<group>"; };
+		6F8797B21BF33FE600F85485 /* NSDate+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSDate+Extension.swift"; sourceTree = "<group>"; };
+		6F8797B31BF33FE600F85485 /* String+Regular.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Regular.swift"; sourceTree = "<group>"; };
+		6F8797B71BF3451B00F85485 /* CZHomeWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CZHomeWebViewController.swift; sourceTree = "<group>"; };
 		6FA9D93C1BE60BD600AAA1CA /* UIButton+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
 		6FA9D93E1BE60D7900AAA1CA /* CZStatusBottomView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CZStatusBottomView.swift; sourceTree = "<group>"; };
 		6FA9D9401BE612E900AAA1CA /* UIScreen+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIScreen+Extension.swift"; sourceTree = "<group>"; };
@@ -111,6 +138,24 @@
 		6FE41CF31BDE442E00CA2E8A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../Assets.xcassets; sourceTree = "<group>"; };
 		6FEA99E11BE98BF20020F50B /* CZComposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CZComposeViewController.swift; sourceTree = "<group>"; };
 		6FEA99E31BEA420E0020F50B /* CZPlaceholderTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CZPlaceholderTextView.swift; sourceTree = "<group>"; };
+		6FECE31D1BF62C7800E3CD6D /* tables.sql */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tables.sql; sourceTree = "<group>"; };
+		6FECE3201BF62C9B00E3CD6D /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
+		6FECE3211BF62C9B00E3CD6D /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
+		6FECE3221BF62C9B00E3CD6D /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
+		6FECE3231BF62C9B00E3CD6D /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
+		6FECE3241BF62C9B00E3CD6D /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
+		6FECE3251BF62C9B00E3CD6D /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
+		6FECE3261BF62C9B00E3CD6D /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
+		6FECE3271BF62C9B00E3CD6D /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseQueue.m; sourceTree = "<group>"; };
+		6FECE3281BF62C9B00E3CD6D /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
+		6FECE3291BF62C9B00E3CD6D /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
+		6FECE32A1BF62C9B00E3CD6D /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
+		6FECE32C1BF62C9B00E3CD6D /* FMDatabaseAdditionsVariadic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FMDatabaseAdditionsVariadic.swift; sourceTree = "<group>"; };
+		6FECE32D1BF62C9B00E3CD6D /* FMDatabaseVariadic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FMDatabaseVariadic.swift; sourceTree = "<group>"; };
+		6FECE3361BF62CDD00E3CD6D /* Header-Bridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Header-Bridge.h"; sourceTree = "<group>"; };
+		6FECE3381BF62DFB00E3CD6D /* CZSQLiteManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CZSQLiteManager.swift; sourceTree = "<group>"; };
+		6FECE3391BF62DFB00E3CD6D /* CZStatusDAL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CZStatusDAL.swift; sourceTree = "<group>"; };
+		6FECE33C1BF62E2E00E3CD6D /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		6FF2E5C91BE6EAB70005D008 /* statuses.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = statuses.json; sourceTree = "<group>"; };
 		6FF2E5CB1BE6F5820005D008 /* CZStatusNormalCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CZStatusNormalCell.swift; sourceTree = "<group>"; };
 		6FF42C691BE720D900DBC3C8 /* CZStatusForwardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CZStatusForwardCell.swift; sourceTree = "<group>"; };
@@ -125,6 +170,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FECE33D1BF62E2E00E3CD6D /* libsqlite3.tbd in Frameworks */,
 				E476694FD418AD2CC9817C23 /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -147,6 +193,9 @@
 		6F14D5571BE4F7BF004304C6 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
+				6F8797B11BF33FE600F85485 /* FFLabel.swift */,
+				6F8797B21BF33FE600F85485 /* NSDate+Extension.swift */,
+				6F8797B31BF33FE600F85485 /* String+Regular.swift */,
 				6F14D5581BE4F7BF004304C6 /* UIBarButtonItem+Extension.swift */,
 				6F14D5591BE4F7BF004304C6 /* UIColor+Extension.swift */,
 				6F14D5991BE4FB15004304C6 /* UILabel+Extension.swift */,
@@ -161,6 +210,7 @@
 		6F14D55A1BE4F7BF004304C6 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				6FECE31F1BF62C9B00E3CD6D /* fmdb */,
 				6FD9E5B11BEF634A00F59862 /* PhotoBrowser */,
 				6FD9E5AC1BEEF12C00F59862 /* PhotoSelector */,
 				6F4B74BE1BECF07000E33A66 /* Emoticon */,
@@ -225,6 +275,7 @@
 			isa = PBXGroup;
 			children = (
 				6F14D5651BE4F7BF004304C6 /* CZHomeViewController.swift */,
+				6F8797B71BF3451B00F85485 /* CZHomeWebViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -381,6 +432,8 @@
 		6F14D5821BE4F7BF004304C6 /* Tool */ = {
 			isa = PBXGroup;
 			children = (
+				6FECE3381BF62DFB00E3CD6D /* CZSQLiteManager.swift */,
+				6FECE3391BF62DFB00E3CD6D /* CZStatusDAL.swift */,
 				6F14D5831BE4F7BF004304C6 /* CZNetworkTools.swift */,
 			);
 			path = Tool;
@@ -411,6 +464,15 @@
 			path = Emoticon;
 			sourceTree = "<group>";
 		};
+		6F8797A81BF2CD5400F85485 /* Animation */ = {
+			isa = PBXGroup;
+			children = (
+				6F8797A91BF2CD9000F85485 /* CZPhotoBrowserModalAnimation.swift */,
+				6F8797AD1BF2DC0100F85485 /* CZPhotoBrowserDismissAnimation.swift */,
+			);
+			path = Animation;
+			sourceTree = "<group>";
+		};
 		6FAF28FF1BF0C269001D9463 /* Popover */ = {
 			isa = PBXGroup;
 			children = (
@@ -435,8 +497,11 @@
 		6FD9E5B11BEF634A00F59862 /* PhotoBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				6F8797A81BF2CD5400F85485 /* Animation */,
 				6FD9E5B21BEF635F00F59862 /* CZPhotoBrowserViewController.swift */,
 				6FD9E5B41BEF6CF200F59862 /* CZPhotoBrowserCell.swift */,
+				6F8797AF1BF2E78900F85485 /* CZImageView.swift */,
+				6F8797AB1BF2D16200F85485 /* CZPhotoBrowserModel.swift */,
 			);
 			path = PhotoBrowser;
 			sourceTree = "<group>";
@@ -462,6 +527,8 @@
 		6FE41C9C1BDE37CE00CA2E8A /* weiboSwift */ = {
 			isa = PBXGroup;
 			children = (
+				6FECE31C1BF62C6800E3CD6D /* Resource */,
+				6FECE3361BF62CDD00E3CD6D /* Header-Bridge.h */,
 				6FE41C9D1BDE37CE00CA2E8A /* AppDelegate.swift */,
 				6F14D5561BE4F7BF004304C6 /* Classes */,
 				6FE41CF31BDE442E00CA2E8A /* Assets.xcassets */,
@@ -504,6 +571,42 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		6FECE31C1BF62C6800E3CD6D /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				6FECE31D1BF62C7800E3CD6D /* tables.sql */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		6FECE31F1BF62C9B00E3CD6D /* fmdb */ = {
+			isa = PBXGroup;
+			children = (
+				6FECE3201BF62C9B00E3CD6D /* FMDatabase.h */,
+				6FECE3211BF62C9B00E3CD6D /* FMDatabase.m */,
+				6FECE3221BF62C9B00E3CD6D /* FMDatabaseAdditions.h */,
+				6FECE3231BF62C9B00E3CD6D /* FMDatabaseAdditions.m */,
+				6FECE3241BF62C9B00E3CD6D /* FMDatabasePool.h */,
+				6FECE3251BF62C9B00E3CD6D /* FMDatabasePool.m */,
+				6FECE3261BF62C9B00E3CD6D /* FMDatabaseQueue.h */,
+				6FECE3271BF62C9B00E3CD6D /* FMDatabaseQueue.m */,
+				6FECE3281BF62C9B00E3CD6D /* FMDB.h */,
+				6FECE3291BF62C9B00E3CD6D /* FMResultSet.h */,
+				6FECE32A1BF62C9B00E3CD6D /* FMResultSet.m */,
+				6FECE32B1BF62C9B00E3CD6D /* Swift extensions */,
+			);
+			path = fmdb;
+			sourceTree = "<group>";
+		};
+		6FECE32B1BF62C9B00E3CD6D /* Swift extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6FECE32C1BF62C9B00E3CD6D /* FMDatabaseAdditionsVariadic.swift */,
+				6FECE32D1BF62C9B00E3CD6D /* FMDatabaseVariadic.swift */,
+			);
+			path = "Swift extensions";
+			sourceTree = "<group>";
+		};
 		6FF565CB1BE8D8A500692345 /* Refresh */ = {
 			isa = PBXGroup;
 			children = (
@@ -516,6 +619,7 @@
 		71B93233C8E2FEA765622917 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6FECE33C1BF62E2E00E3CD6D /* libsqlite3.tbd */,
 				2CDF445EF5DF551A5DC3D636 /* Pods.framework */,
 			);
 			name = Frameworks;
@@ -566,6 +670,7 @@
 				TargetAttributes = {
 					6FE41C991BDE37CE00CA2E8A = {
 						CreatedOnToolsVersion = 7.0.1;
+						DevelopmentTeam = JPH3XFY3TH;
 					};
 				};
 			};
@@ -597,6 +702,7 @@
 				6FF2E5CA1BE6EAB70005D008 /* statuses.json in Resources */,
 				6FAF29011BF0C276001D9463 /* Popover.storyboard in Resources */,
 				6FF565CD1BE8DD8E00692345 /* CZRefreshView.xib in Resources */,
+				6FECE31E1BF62C7800E3CD6D /* tables.sql in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -660,14 +766,18 @@
 				6F14D5921BE4F7BF004304C6 /* CZWelcomeViewController.swift in Sources */,
 				6FD9E5B31BEF635F00F59862 /* CZPhotoBrowserViewController.swift in Sources */,
 				6F14D59E1BE50420004304C6 /* CZStatusCell.swift in Sources */,
+				6F8797B61BF33FE600F85485 /* String+Regular.swift in Sources */,
+				6F8797AE1BF2DC0100F85485 /* CZPhotoBrowserDismissAnimation.swift in Sources */,
 				6F14D5851BE4F7BF004304C6 /* UIColor+Extension.swift in Sources */,
 				6F14D5901BE4F7BF004304C6 /* CZMessageViewController.swift in Sources */,
 				6F14D5951BE4F7BF004304C6 /* CZNetworkTools.swift in Sources */,
 				6FA9D93D1BE60BD600AAA1CA /* UIButton+Extension.swift in Sources */,
 				6FD9E5B51BEF6CF200F59862 /* CZPhotoBrowserCell.swift in Sources */,
 				6FF565CF1BE8DFF700692345 /* CZRefreshControl.swift in Sources */,
+				6F8797B51BF33FE600F85485 /* NSDate+Extension.swift in Sources */,
 				6F14D5841BE4F7BF004304C6 /* UIBarButtonItem+Extension.swift in Sources */,
 				6FD9E5B01BEF22D600F59862 /* UIImage+Extension.swift in Sources */,
+				6FECE33A1BF62DFB00E3CD6D /* CZSQLiteManager.swift in Sources */,
 				6FEA99E41BEA420E0020F50B /* CZPlaceholderTextView.swift in Sources */,
 				6FA9D9411BE612E900AAA1CA /* UIScreen+Extension.swift in Sources */,
 				6FEA99E21BE98BF20020F50B /* CZComposeViewController.swift in Sources */,
@@ -677,30 +787,43 @@
 				6F14D5941BE4F7BF004304C6 /* CZProfileViewController.swift in Sources */,
 				6F14D58B1BE4F7BF004304C6 /* CZHomeTitleButton.swift in Sources */,
 				6F14D58A1BE4F7BF004304C6 /* CZHomeViewController.swift in Sources */,
+				6FECE3321BF62C9B00E3CD6D /* FMResultSet.m in Sources */,
 				6FAF29031BF0C702001D9463 /* CZPopoverViewController.swift in Sources */,
 				6F14D59C1BE500B8004304C6 /* UIView+AutoLayout.swift in Sources */,
 				6FF2E5CC1BE6F5820005D008 /* CZStatusNormalCell.swift in Sources */,
 				6F14D5861BE4F7BF004304C6 /* CZStatus.swift in Sources */,
 				6F14D5871BE4F7BF004304C6 /* CZUser.swift in Sources */,
 				6FAF29091BF0D936001D9463 /* CZDismissAnimation.swift in Sources */,
+				6F8797B01BF2E78900F85485 /* CZImageView.swift in Sources */,
 				6FAF290B1BF0E3DE001D9463 /* UIImage+Scale.swift in Sources */,
 				6F14D5981BE4F891004304C6 /* CZStatusTopView.swift in Sources */,
 				6F14D58D1BE4F7BF004304C6 /* CZMainViewController.swift in Sources */,
 				6F14D5931BE4F7BF004304C6 /* CZOauthViewController.swift in Sources */,
+				6FECE33B1BF62DFB00E3CD6D /* CZStatusDAL.swift in Sources */,
+				6F8797AC1BF2D16200F85485 /* CZPhotoBrowserModel.swift in Sources */,
+				6FECE3331BF62C9B00E3CD6D /* FMDatabaseAdditionsVariadic.swift in Sources */,
 				6F14D58F1BE4F7BF004304C6 /* CZVisitorView.swift in Sources */,
 				6F14D58E1BE4F7BF004304C6 /* CZMainTabBar.swift in Sources */,
 				6F14D58C1BE4F7BF004304C6 /* CZBaseViewController.swift in Sources */,
+				6FECE3301BF62C9B00E3CD6D /* FMDatabasePool.m in Sources */,
 				6F4B74C41BECF07000E33A66 /* CZEmoticon.swift in Sources */,
+				6FECE3341BF62C9B00E3CD6D /* FMDatabaseVariadic.swift in Sources */,
 				6F4B74C81BECF07000E33A66 /* UITextView+Emoticon.swift in Sources */,
 				6FA9D93F1BE60D7900AAA1CA /* CZStatusBottomView.swift in Sources */,
 				6FF42C6A1BE720D900DBC3C8 /* CZStatusForwardCell.swift in Sources */,
+				6F8797B41BF33FE600F85485 /* FFLabel.swift in Sources */,
 				6F14D59A1BE4FB15004304C6 /* UILabel+Extension.swift in Sources */,
+				6F8797AA1BF2CD9000F85485 /* CZPhotoBrowserModalAnimation.swift in Sources */,
+				6FECE32F1BF62C9B00E3CD6D /* FMDatabaseAdditions.m in Sources */,
 				6FE41C9E1BDE37CE00CA2E8A /* AppDelegate.swift in Sources */,
 				6F4B74C51BECF07000E33A66 /* CZEmoticonViewController.swift in Sources */,
+				6F8797B81BF3451B00F85485 /* CZHomeWebViewController.swift in Sources */,
 				6F14D5881BE4F7BF004304C6 /* CZUserAccount.swift in Sources */,
 				6F14D5891BE4F7BF004304C6 /* CZDiscoverViewController.swift in Sources */,
 				6FA9D9431BE62A0E00AAA1CA /* CZStatusPictureView.swift in Sources */,
+				6FECE32E1BF62C9B00E3CD6D /* FMDatabase.m in Sources */,
 				6FAF29071BF0D238001D9463 /* CZModalAnimation.swift in Sources */,
+				6FECE3311BF62C9B00E3CD6D /* FMDatabaseQueue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -747,6 +870,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "weiboSwift/Header-Bridge.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -784,6 +908,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "weiboSwift/Header-Bridge.h";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -795,6 +920,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = BrandAsset;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = weiboSwift/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -811,6 +937,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = BrandAsset;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = weiboSwift/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

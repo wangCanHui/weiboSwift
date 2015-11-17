@@ -10,6 +10,10 @@ import UIKit
 let StatusCellMargin: CGFloat = 8
 class CZStatusCell: UITableViewCell {
     // MARK: - 属性
+    
+    /// 代理
+    weak var cellDelegate: CZStatusCellDelegate?
+    
     /// 配图宽度约束
     var pictureViewWidthCons: NSLayoutConstraint?
     /// 配图高度约束
@@ -26,8 +30,9 @@ class CZStatusCell: UITableViewCell {
             pictureViewWidthCons?.constant = pictureView.calcPictureViewSize().width
             pictureViewHeightCons?.constant = pictureView.calcPictureViewSize().height
             // 设置微博内容
-            contentLabel.text = status?.text
-            
+//            contentLabel.text = status?.text
+            // 设置带图片的微博内容
+            contentLabel.attributedText = status?.attrText
         }
     }
     
@@ -45,17 +50,18 @@ class CZStatusCell: UITableViewCell {
         
     }
     
-    
-     // MARK: - 构造函数
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-//        backgroundColor = UIColor.redColor()
-        prepareUI()
-    }
-
+    // MARK: - 构造函数
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        prepareUI()
+    }
+    
+
     
     // MARK: - 准备UI
     func prepareUI() {
@@ -95,11 +101,13 @@ class CZStatusCell: UITableViewCell {
     /// 顶部视图
     private lazy var topView:CZStatusTopView = CZStatusTopView()
     /// 微博内容
-    lazy var contentLabel:UILabel = {
-        let label = UILabel(fontSize: 16, textColor: UIColor.blackColor())
+    lazy var contentLabel:FFLabel = {
+        let label = FFLabel(fontSize: 16, textColor: UIColor.blackColor())
         
         // 设置显示多行
         label.numberOfLines = 0
+        
+        label.labelDelegate = self
         
         return label
     }()
@@ -111,3 +119,23 @@ class CZStatusCell: UITableViewCell {
     lazy var bottomView: CZStatusBottomView = CZStatusBottomView()
     
 }
+
+// MARK: - 扩展CZStatusCell，实现FFLabelDelegate协议
+extension CZStatusCell: FFLabelDelegate {
+    // 当有高亮的文字被点击
+    func labelDidSelectedLinkText(label: FFLabel, text: String) {
+        //        print("点中的文字:\(text)")
+        // 如果点击的是网址,就弹出网址对应的内容
+        if text.hasPrefix("http") {
+             print("弹出内容")
+            cellDelegate?.urlClick(text)
+        }
+    }
+}
+
+// MARK: - 自定义CZStatusCellDelegate
+protocol CZStatusCellDelegate: NSObjectProtocol {
+     // cell里面的url地址被点击了
+    func urlClick(text: String)
+}
+
